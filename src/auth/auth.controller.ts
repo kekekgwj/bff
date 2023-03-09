@@ -5,6 +5,7 @@ import {
   Get,
   Query,
   VERSION_NEUTRAL,
+  Header,
 } from '@nestjs/common';
 
 import { FeishuAuthGuard } from './guards/feishu-auth.guard';
@@ -63,6 +64,7 @@ export class AuthController {
   @UseGuards(ZjlabAuthGuard)
   @Public()
   @Get('/zjlab/auth') 
+  @Header('access-control-expose-headers', 'Set-Cookie')
   async getZJLabToken(
     @PayloadUser() user: Payload,
     @Res({ passthrough: true }) response: FastifyReply,
