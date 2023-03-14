@@ -32,7 +32,7 @@ export class ZjlabService {
         }
       
       } else {
-        throw new Error("fail");
+        throw new Error("fail: ticket invalid");
       }
 
     } catch (e) {
