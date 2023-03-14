@@ -69,11 +69,11 @@ export class AuthService {
   }
 
   // 获取zjlab信息
-  async getZjlabInfoByTicket(ticket: string) {
-    const data = await this.zjlabService.getUserInfo(ticket);
-    return data;
+  // async getZjlabInfoByTicket(ticket: string) {
+  //   const data = await this.zjlabService.getUserInfo(ticket);
+  //   return data;
 
-  }
+  // }
 
 
 }

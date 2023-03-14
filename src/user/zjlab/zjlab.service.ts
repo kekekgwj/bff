@@ -8,14 +8,7 @@ import {
 
 @Injectable()
 export class ZjlabService {
-  private ZJ_LAB_APP_ID
 
-  constructor(
-    // private configService: ConfigService
-  ) {
-    // const { ZJ_CONFIG } = getConfig()
-    // this.ZJ_LAB_APP_ID = ZJ_CONFIG.APP_ID;
-  }
   async getUserInfo(ticket: string) {
     const xml: any = await getInfo(ticket)
     const xmlData = xml2js(xml, {
@@ -28,7 +21,7 @@ export class ZjlabService {
         const suc = data["cas:authenticationSuccess"];
         const userID = suc["cas:user"]["_text"];
         const attrs = suc["cas:attributes"];
-        const nameBase64 = attrs["cas:displayName"]["_text"];
+        const nameBase64 = attrs["cas:displayName"]["_text"].split(':')[1];
         const name = Buffer.from(nameBase64, 'base64').toString();
         const sessionID = attrs["cas:globalSessionId"]["_text"];
         

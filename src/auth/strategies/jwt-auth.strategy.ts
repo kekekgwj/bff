@@ -8,7 +8,7 @@ import { FastifyRequest } from "fastify";
 const cookieExtractor = function (req: FastifyRequest) {
   let token = null;
   if (req && req.cookies) {
-    token = req.cookies['jwt_zjlab'];
+    token = req.cookies['jwt'];
   }
   return token;
 };
@@ -24,6 +24,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: Payload): Promise<Payload> {
+    
     return { ...payload };
   }
 }

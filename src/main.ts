@@ -12,6 +12,7 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 import { FastifyLogger } from './common/logger';
 import { generateDocument } from './doc';
 import fastifyCookie from '@fastify/cookie';
+import * as cookieParser from 'cookie-parser';
 
 declare const module: any;
 
@@ -47,13 +48,17 @@ async function bootstrap() {
 
   // 创建文档
   generateDocument(app)
-
+  app.use(cookieParser());
   // 添加热更新
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());
   }
-  app.enableCors();
+  // app.enableCors({
+  //   origin: 'http://localhost:3005',
+  //   credentials: true,
+
+  // });
 
   await app.listen(3000, "0.0.0.0");
 }
