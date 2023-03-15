@@ -7,7 +7,6 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { AuthController } from './auth.controller';
-import { FeishuStrategy } from './strategies/feishu-auth.strategy';
 import { ZjlabStrategy } from './strategies/zjlab-auth.strategy';
 @Module({
   imports: [
@@ -19,7 +18,7 @@ import { ZjlabStrategy } from './strategies/zjlab-auth.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, FeishuStrategy, ZjlabStrategy],
+  providers: [AuthService, JwtStrategy, ZjlabStrategy],
   exports: [AuthService],
 })
 export class AuthModule { }

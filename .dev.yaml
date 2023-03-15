@@ -1,11 +1,5 @@
 TEST_VALUE:
   name: “dev——cookie"
-FEISHU_CONFIG:
-  FEISHU_URL: https://open.feishu.cn/open-apis
-  FEISHU_API_HOST: https://open.feishu.cn
-  FEISHU_APP_ID: cli_a37d9e15e8a5900d
-  FEISHU_APP_SECRET: zJT5XloAjmi7Nqp6wvFOfcroClC0RbhN
-  REDIRECT_URL: http://www.baidu.com
 APP_TOKEN_CACHE_KEY: APP_TOKEN_CACHE_KEY
 MONGODB_CONFIG:
   name: "test"                       # 自定义次数据库链接名称
@@ -24,3 +18,8 @@ ZJ_LAB:
   server-login-url: https://onekey-test.zhejianglab.com/maxkey/authz/cas/687f9918-23fa-4188-a150-f826e99b57ab
   client-host-url: http://10.5.2.4:8889/
   validation-type: CAS3
+MAIL:
+  host: "smtp.qiye.aliyun.com"
+  port: 25
+  user: "fintech-portal@zhejianglab.com"
+  pass: "Fintech123"

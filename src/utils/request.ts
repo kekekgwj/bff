@@ -1,7 +1,6 @@
 import axios, { Method } from 'axios';
 import { getConfig } from '@/utils';
 
-const { FEISHU_CONFIG: { FEISHU_URL } } = getConfig()
 
 /**
  * @description: 任意请求
@@ -44,7 +43,6 @@ const methodV = async ({
   if (/^(http:\/\/|https:\/\/)/.test(url)) {
     sendUrl = url;
   } else {
-    sendUrl = `${FEISHU_URL}${url}`;
   }
   try {
     return new Promise((resolve, reject) => {
