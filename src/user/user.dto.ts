@@ -16,3 +16,23 @@ export class AddUserDto {
   @IsNotEmpty()
   username: string;
 }
+
+export class UserRegister {
+  @ApiProperty({example: 'testRegister@zjlab.com'})
+  email: string;
+  @ApiProperty({example: 'testRegister'})
+  username: string;
+  @ApiProperty({example: '之江实验室'})
+  company: string;
+  @ApiProperty({example: '科研'})
+  companyType: string;
+  @ApiProperty({example: 'testpassword'})
+  password: string;
+}
+
+export class UserActivate {
+  @ApiProperty({example: 'testRegister@zjlab.com'})
+  username: string;
+  @ApiProperty({example: 'xxxyyy'})
+  code: string;
+}

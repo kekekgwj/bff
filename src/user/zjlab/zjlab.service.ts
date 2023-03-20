@@ -45,19 +45,19 @@ export class ZjlabService {
 
   }
 
-  async smtpServerConnect() {
+  async smtpServerConnect(verifyCode: string, email: string) {
     // 生成验证码
-    const smsVerificationCode = getDigitalCode(4).toString();
     this.mailerService
     .sendMail({
-      to: 'guo.weijie@zhejianglab.com',
+      to: email,
       from: 'fintech-portal@zhejianglab.com',
-      subject: 'Testing Nest MailerModule ✔', // Subject line
-      text: 'welcome', // plaintext body
+      subject: '之江金融验证平台注册验证', 
+      // text: '您好！感谢您注册之江金融验证平台！您的账户正在进行邮箱验证，请点击🔗链接就行验证，有效期为10分钟', 
       template: 'index',
       context: {  // Data to be sent to template engine.
-        code: smsVerificationCode,
-        username: 'john doe',
+        code: verifyCode,
+        email,
+        link: `http://localhost:3000/user/activate?username=${email}&code=${verifyCode}`,
       },
     })
     .then((success) => {

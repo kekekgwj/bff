@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn({ type: 'int'} )
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
@@ -12,8 +12,14 @@ export class User {
   password: string;
 
   @Column()
-  mail: string;
+  email: string;
 
   @Column()
-  login: string;
+  active: boolean;
+
+  @Column()
+  companyType: string;
+  
+  @Column()
+  company: string;
 }

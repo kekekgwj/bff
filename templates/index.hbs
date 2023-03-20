@@ -4,7 +4,7 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Simple Transactional Email</title>
+    <title>之江金融验证平台注册验证</title>
     <style>
         /* -------------------------------------
           GLOBAL RESETS
@@ -305,7 +305,7 @@
 </head>
 
 <body class="">
-    <span class="preheader">This is preheader text. Some clients will show this text as a preview.</span>
+    <span class="preheader">邮箱验证.</span>
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body">
         <tr>
             <td>&nbsp;</td>
@@ -321,9 +321,9 @@
                                 <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td>
-                                            <p>Hi there,</p>
-                                            <p>Context Code : {{code}}</p>
-                                            <p>Context Username: {{username}}</p>
+                                            <p>您好！</p>
+                                           <p>感谢您注册之江金融验证平台！您的账户正在进行邮箱验证，请点击下方🔗按钮进行验证，有效期为10分钟</p>
+                                            <p>当前注册邮箱： {{ email }}</p>
                                             <table role="presentation" border="0" cellpadding="0" cellspacing="0"
                                                 class="btn btn-primary">
                                                 <tbody>
@@ -333,8 +333,8 @@
                                                                 cellspacing="0">
                                                                 <tbody>
                                                                     <tr>
-                                                                        <td> <a href="http://htmlemail.io"
-                                                                                target="_blank">Call To Action</a> </td>
+                                                                        <td> <a href="{{link}}"
+                                                                                target="_blank">验证激活</a> </td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -342,9 +342,7 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            <p>This is a really simple email template. Its sole purpose is to get the
-                                                recipient to click the button with no distractions.</p>
-                                            <p>Good luck! Hope it works.</p>
+                            
                                         </td>
                                     </tr>
                                 </table>
@@ -360,16 +358,15 @@
                         <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td class="content-block">
-                                    <span class="apple-link">Company Inc, 3 Abbey Road, San Francisco CA 94102</span>
-                                    <br> Don't like these emails? <a
-                                        href="http://i.imgur.com/CScmqnj.gif">Unsubscribe</a>.
+                                    <span class="apple-link">之江实验室</span>
+       
                                 </td>
                             </tr>
-                            <tr>
+                            {{!-- <tr>
                                 <td class="content-block powered-by">
                                     Powered by <a href="http://htmlemail.io">HTMLemail</a>.
                                 </td>
-                            </tr>
+                            </tr> --}}
                         </table>
                     </div>
                     <!-- END FOOTER -->

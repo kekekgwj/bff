@@ -23,10 +23,6 @@ declare type Payload = {
   username: string;
   name: string;
   email: string;
-  feishuAccessToken: string;
-  feishuUserId: string;
-  department?: string;
-  departmentId?: string;
 };
 
 declare type PayloadZjlab = {

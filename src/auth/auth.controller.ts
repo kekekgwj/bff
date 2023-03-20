@@ -7,14 +7,18 @@ import {
   VERSION_NEUTRAL,
   Header,
   Req,
+  Post,
+  Body,
+  Param,
 } from '@nestjs/common';
 import { ZjlabAuthGuard } from './guards/zjlab-auth.guard'
 import { AuthService } from './auth.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { GetZjLabUserInfo } from './auth.dto';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { GetZjLabUserInfo, UserLoginInfo } from './auth.dto';
 import { Public } from './constants';
 import { PayloadUser } from '@/helper';
 import { FastifyReply } from 'fastify'
+import { FastifyRequest } from 'fastify';
 
 @ApiTags('用户认证')
 @Controller({
@@ -48,7 +52,7 @@ export class AuthController {
   @Get('/zjlab/auth') 
   @Header('access-control-expose-headers', 'Set-Cookie')
   async getZJLabToken(
-    @PayloadUser() user: Payload,
+    @PayloadUser() user: UserLoginInfo,
     @Res({ passthrough: true }) response: FastifyReply,
     @Query() query: GetZjLabUserInfo,
     ) {
@@ -67,5 +71,16 @@ export class AuthController {
   ) {
     response.clearCookie('jwt');
     return "clear token";
+  }
+
+  @ApiOperation({
+    summary: '使用账号密码登录'
+  })
+  @Post('/zjlab/login')
+  @Public()
+  async passWordLogin(
+    @Body() body: UserLoginInfo, @Req() req: FastifyRequest
+  ) {
+    // return this.authService.storeRedis();
   }
 }

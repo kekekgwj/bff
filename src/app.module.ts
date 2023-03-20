@@ -13,7 +13,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 
 const config = getConfig();
 
-const { MAIL } = config;
+const { MAIL, MYSQL, REDIS } = config;
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -21,15 +21,21 @@ const { MAIL } = config;
       isGlobal: true,
       load: [getConfig]
     }),
+    CacheModule.register({
+      isGlobal: true,
+      store: redisStore,
+      host: REDIS.host,
+      port: REDIS.port,
+    }),
     UserModule,
     AuthModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: '10.101.104.61',
-      port: 3307,
-      username: 'root',
-      password: '123456',
-      database: 'zjlab',
+      host: MYSQL.host,
+      port: MYSQL.port,
+      username: MYSQL.username,
+      password: MYSQL.password,
+      database: MYSQL.database,
       entities: [User],
       synchronize: true,
     }),
