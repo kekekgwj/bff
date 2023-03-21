@@ -8,6 +8,8 @@ import {
   Header,
   Post,
   Body,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { ZjlabAuthGuard } from './guards/zjlab-auth.guard'
 import { AuthService } from './auth.service';
@@ -17,6 +19,9 @@ import { Public } from './constants';
 import { PayloadUser } from '@/helper';
 import { FastifyReply } from 'fastify'
 import { UserService } from 'src/user/user.service';
+import { UserRegister } from '@/user/user.dto';
+import { User } from '@/user/entities/user.entity';
+import { ZjlabService } from '@/user/zjlab/zjlab.service';
 
 @ApiTags('用户认证')
 @Controller({
@@ -27,6 +32,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private userService: UserService,
+    private readonly zjlabService: ZjlabService,
   ) { }
 
 
@@ -81,16 +87,38 @@ export class AuthController {
     @Res({ passthrough: true }) response: FastifyReply,
   ) {
     try {
-      const { user, password } = body;
-      const userInfo = await this.userService.loginWithPassWord(user, password);
-      const { access_token } = await this.authService.login({ user, password });
+      const { username, password } = body;
+      const userInfo = await this.userService.loginWithPassWord(username, password);
+      const { access_token } = await this.authService.login({ username, password });
       response.setCookie('jwt', access_token, { path: '/'});
       return userInfo;
     } catch (e) {
-      return e.toString();
+      throw new HttpException(e.toString(), HttpStatus.BAD_REQUEST)
     }
-
-
     // return this.authService.storeRedis();
+  }
+  @ApiOperation({ summary: '注册' })
+  @Post('/register')
+  @Public()
+  async register(
+    @Body() body: UserRegister
+  ) {
+    const registerInfo: Omit<User, 'id'> = {
+      username: body.username,
+      password: body.password,
+      email: body.email,
+      active: false,
+      company: body.company,
+      companyType: body.companyType,
+    };
+    try {
+      const verifyCode = this.userService.generateVerificationCode();
+      await this.userService.registerUser(registerInfo);
+      await this.zjlabService.smtpServerConnect(verifyCode, body.email);
+      await this.userService.storeRedisByUsername(verifyCode, body.username);
+      return '注册成功，等待激活';
+    } catch (e) {
+      throw new HttpException(e.toString(), HttpStatus.BAD_REQUEST);
+    }
   }
 }
