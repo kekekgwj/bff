@@ -53,12 +53,29 @@ export class UserService {
       ...userExist,
       ...property,
     })
+  }
 
+  async updatePassword(username: string, password: string, verifyCode: string): Promise<any> {
+    const redisCode = await this.getRedisByUsername(username);
+    if (!verifyCode || verifyCode !== redisCode) {
+      throw new Error('校验码错误');
+    }
+    return await this.updateColumn(username, { password });
   }
   async activateAccount(username: string): Promise<any> {
     return await this.updateColumn(username, {'active': true });
   }
-
+  async loginWithPassWord(username: string, password: string): Promise<any> {
+    const user: User = await this.usersRepository.findOneBy({ username, password });
+    if (!user) {
+      throw new Error('查找用户不存在');
+    }
+    if (!Boolean(user.active)) {
+      throw new Error('用户未激活');
+    }
+    return user;
+  
+  }
   generateVerificationCode() {
     const reg = /(.+)(?=.*\1.*)/
     const code = Math.random()

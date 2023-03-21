@@ -19,8 +19,8 @@ export class UserLoginInfo {
   user: string;
   @ApiProperty({ example: 'testpass'})
   password: string;
-  @ApiProperty({ example: 'email'})
-  email: string;
+  // @ApiProperty({ example: 'email'})
+  // email: string;
 }
 
 

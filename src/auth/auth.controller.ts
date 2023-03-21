@@ -6,10 +6,8 @@ import {
   Query,
   VERSION_NEUTRAL,
   Header,
-  Req,
   Post,
   Body,
-  Param,
 } from '@nestjs/common';
 import { ZjlabAuthGuard } from './guards/zjlab-auth.guard'
 import { AuthService } from './auth.service';
@@ -18,7 +16,7 @@ import { GetZjLabUserInfo, UserLoginInfo } from './auth.dto';
 import { Public } from './constants';
 import { PayloadUser } from '@/helper';
 import { FastifyReply } from 'fastify'
-import { FastifyRequest } from 'fastify';
+import { UserService } from 'src/user/user.service';
 
 @ApiTags('用户认证')
 @Controller({
@@ -28,7 +26,7 @@ import { FastifyRequest } from 'fastify';
 export class AuthController {
   constructor(
     private authService: AuthService,
-    
+    private userService: UserService,
   ) { }
 
 
@@ -43,20 +41,20 @@ export class AuthController {
   }
 
 
-  @ApiOperation({
+  @ApiOperation({ 
     summary: 'ZJLAB SSO登陆',
     description: 'https://onekey-test.zhejianglab.com/maxkey/authz/cas/687f9918-23fa-4188-a150-f826e99b57ab?service=http%3A%2F%2Flocalhost%3A3005%2F'
   })
   @UseGuards(ZjlabAuthGuard)
   @Public()
-  @Get('/zjlab/auth') 
+  @Get('/jwt-login') 
   @Header('access-control-expose-headers', 'Set-Cookie')
   async getZJLabToken(
     @PayloadUser() user: UserLoginInfo,
     @Res({ passthrough: true }) response: FastifyReply,
     @Query() query: GetZjLabUserInfo,
     ) {
-    // zjlabAuthguard 的validate把user挂载ctx.request -> @payloaduser传参 -> user存为token -> 上一次访问的时候 /token/info接口解析token
+    // zjlabAuthguard 的validate把user挂载ctx.request -> @payloaduser传参 -> user存为token -> 下一次访问的时候 /token/info接口解析token
     const { access_token } = await this.authService.login(user);
     response.setCookie('jwt', access_token, { path: '/'});
     return access_token;
@@ -64,7 +62,7 @@ export class AuthController {
   @ApiOperation({
     summary: '登出接口, 清除cookie'
   })
-  @Get('/zjlab/logout')
+  @Get('/logout')
   @Public()
   async toLogout(
     @Res({ passthrough: true }) response: FastifyReply,
@@ -76,11 +74,23 @@ export class AuthController {
   @ApiOperation({
     summary: '使用账号密码登录'
   })
-  @Post('/zjlab/login')
+  @Post('/login')
   @Public()
   async passWordLogin(
-    @Body() body: UserLoginInfo, @Req() req: FastifyRequest
+    @Body() body: UserLoginInfo,
+    @Res({ passthrough: true }) response: FastifyReply,
   ) {
+    try {
+      const { user, password } = body;
+      const userInfo = await this.userService.loginWithPassWord(user, password);
+      const { access_token } = await this.authService.login({ user, password });
+      response.setCookie('jwt', access_token, { path: '/'});
+      return userInfo;
+    } catch (e) {
+      return e.toString();
+    }
+
+
     // return this.authService.storeRedis();
   }
 }
