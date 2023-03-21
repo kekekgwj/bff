@@ -16,7 +16,7 @@ export class GetZjLabUserInfo {
 
 export class UserLoginInfo {
   @ApiProperty({ example: 'testuser'})
-  user: string;
+  username: string;
   @ApiProperty({ example: 'testpass'})
   password: string;
   // @ApiProperty({ example: 'email'})

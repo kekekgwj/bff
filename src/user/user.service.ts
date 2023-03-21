@@ -38,9 +38,13 @@ export class UserService {
  
   async registerUser(registerInfo): Promise<any> {
    const userExist = await this.findOne(registerInfo.username);
+   if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(registerInfo.email)) {
+    throw new Error('邮箱名不符合规则')
+  }
    if (userExist) {
     throw new Error('当前注册邮箱已存在');
    }
+
    return await this.usersRepository.save(registerInfo);
   }
 
