@@ -23,3 +23,12 @@ MAIL:
   port: 25
   user: "fintech-portal@zhejianglab.com"
   pass: "Fintech123"
+MYSQL:
+  host: "10.101.104.61"
+  port: 3307
+  username: "root"
+  password: "123456"
+  database: "zjlab"
+REDIS: 
+  host: "10.101.104.61"
+  port: 6379
