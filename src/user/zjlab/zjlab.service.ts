@@ -44,15 +44,32 @@ export class ZjlabService {
     
 
   }
-
-  async smtpServerConnect(verifyCode: string, email: string) {
+  async smtpServerRetrievePassword(verifyCode: string, email: string) { 
+    this.mailerService
+    .sendMail({
+      to: email,
+      from: 'fintech-portal@zhejianglab.com',
+      subject: '之江金融验证平台密码找回', 
+      template: 'retrieve',
+      context: {  // Data to be sent to template engine.
+        code: verifyCode,
+        email,
+      },
+    })
+    .then((success) => {
+      console.log(success)
+    })
+    .catch((err) => {
+      console.log(err)
+    });
+  }
+  async smtpServerRegister(verifyCode: string, email: string) {
     // 生成验证码
     this.mailerService
     .sendMail({
       to: email,
       from: 'fintech-portal@zhejianglab.com',
       subject: '之江金融验证平台注册验证', 
-      // text: '您好！感谢您注册之江金融验证平台！您的账户正在进行邮箱验证，请点击🔗链接就行验证，有效期为10分钟', 
       template: 'index',
       context: {  // Data to be sent to template engine.
         code: verifyCode,

@@ -20,7 +20,7 @@ export class UserController {
   @ApiOperation({summary: 'SMTP 连接测试'})
   @Get('/smtp')
   async connect() {
-    await this.zjlabService.smtpServerConnect('1234', 'guo.weijie@zhejianglab.com');
+    await this.zjlabService.smtpServerRegister('1234', 'guo.weijie@zhejianglab.com');
     return "mail sent"
   }
 

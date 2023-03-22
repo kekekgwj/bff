@@ -30,6 +30,11 @@ export class UserRegister {
   password: string;
 }
 
+export class UserVerify {
+  username: string;
+  password: string;
+  verifyCode: string;
+}
 export class UserActivate {
   @ApiProperty({example: 'testRegister@zjlab.com'})
   username: string;

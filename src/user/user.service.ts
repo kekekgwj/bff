@@ -48,6 +48,14 @@ export class UserService {
    return await this.usersRepository.save(registerInfo);
   }
 
+  async retrieveUser(retrieveInfo): Promise<any> {
+    const userExist = await this.findOne(retrieveInfo.username);
+    if (!userExist) {
+      throw new Error('当前邮箱不存在');
+     }
+    return userExist;
+  }
+
   async updateColumn(username: string, property: {[key: string]: any}): Promise<any> {
     const userExist = await this.findOne(username);
     if (!userExist) {

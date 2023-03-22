@@ -19,7 +19,7 @@ import { Public } from './constants';
 import { PayloadUser } from '@/helper';
 import { FastifyReply } from 'fastify'
 import { UserService } from 'src/user/user.service';
-import { UserRegister } from '@/user/user.dto';
+import { UserRegister, UserVerify } from '@/user/user.dto';
 import { User } from '@/user/entities/user.entity';
 import { ZjlabService } from '@/user/zjlab/zjlab.service';
 
@@ -93,7 +93,7 @@ export class AuthController {
       response.setCookie('jwt', access_token, { path: '/'});
       return userInfo;
     } catch (e) {
-      throw new HttpException(e.toString(), HttpStatus.BAD_REQUEST)
+      throw new HttpException(e.toString(), HttpStatus.UNAUTHORIZED)
     }
     // return this.authService.storeRedis();
   }
@@ -112,13 +112,49 @@ export class AuthController {
       companyType: body.companyType,
     };
     try {
-      const verifyCode = this.userService.generateVerificationCode();
       await this.userService.registerUser(registerInfo);
-      await this.zjlabService.smtpServerConnect(verifyCode, body.email);
+      const verifyCode = this.userService.generateVerificationCode();
+      await this.zjlabService.smtpServerRegister(verifyCode, body.email);
       await this.userService.storeRedisByUsername(verifyCode, body.username);
       return '注册成功，等待激活';
     } catch (e) {
-      throw new HttpException(e.toString(), HttpStatus.BAD_REQUEST);
+      throw new HttpException(e.toString(), HttpStatus.UNAUTHORIZED);
+    }
+  }
+  @ApiOperation({ summary: '找回密码' })
+  @Post('/retrieve')
+  @Public()
+  async retrieve(
+    @Body() body: UserRegister
+  ) {
+    const retrieveInfo: Pick<User, 'username'> = {
+      username: body.username,
+    };
+    try {
+      await this.userService.retrieveUser(retrieveInfo);
+      const verifyCode = this.userService.generateVerificationCode();
+      // 发送验证码
+      await this.zjlabService.smtpServerRetrievePassword(verifyCode, body.username);
+      // 双向存储
+      await this.userService.storeRedisByUsername(body.username, verifyCode);
+      await this.userService.storeRedisByUsername(verifyCode, body.username);
+    } catch (e) {
+      throw new HttpException(e.toString(), HttpStatus.UNAUTHORIZED);
+    }
+  }
+  @ApiOperation({ summary: '密码重置' })
+  @Post('/reset')
+  @Public()
+  async reset(
+    @Body() body: UserVerify 
+  ) {
+    const { password, verifyCode } = body;
+    try {
+      const username = await this.userService.getRedisByUsername(verifyCode);
+      // const user = await this.userService.retrieveUser({ username });
+      await this.userService.updatePassword(username, password, verifyCode);
+    } catch (e) {
+      throw new HttpException(e.toString(), HttpStatus.UNAUTHORIZED);
     }
   }
 }
