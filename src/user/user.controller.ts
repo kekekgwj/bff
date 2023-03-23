@@ -5,7 +5,7 @@ import { ZjlabService } from 'src/user/zjlab/zjlab.service';
 import { UserActivate, UserRegister } from './user.dto';
 import { User } from './entities/user.entity';
 import { Public } from '../auth/constants';
-
+import { RealIP } from 'nestjs-real-ip';
 @ApiTags('用户')
 @Controller({
   path: 'user',
@@ -38,6 +38,12 @@ export class UserController {
     } else {
       throw '激活失败';
     }
+  }
+  @ApiTags('获取ip')
+  @Public()
+  @Get('/ip')
+  getRealIP (@RealIP() ip: string): string {
+    return ip;
   }
 }
 

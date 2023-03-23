@@ -28,7 +28,7 @@ export class ZjlabService {
         
         userInfo = {
           id: userID,
-          name,
+          username: name,
           sessionID,
         }
       

@@ -53,7 +53,7 @@ export class AuthController {
   })
   @UseGuards(ZjlabAuthGuard)
   @Public()
-  @Get('/jwt-login') 
+  @Get('/sso/login') 
   @Header('access-control-expose-headers', 'Set-Cookie')
   async getZJLabToken(
     @PayloadUser() user: UserLoginInfo,
