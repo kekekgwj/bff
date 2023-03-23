@@ -78,9 +78,12 @@ export class UserService {
     return await this.updateColumn(username, {'active': true });
   }
   async loginWithPassWord(username: string, password: string): Promise<any> {
-    const user: User = await this.usersRepository.findOneBy({ username, password });
+    const user: User = await this.usersRepository.findOneBy({ username });
     if (!user) {
-      throw new Error('查找用户不存在');
+      throw new Error('用户不存在');
+    }
+    if (user.password !== password) {
+      throw new Error('密码错误');
     }
     if (!Boolean(user.active)) {
       throw new Error('用户未激活');

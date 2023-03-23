@@ -20,9 +20,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     // 非 HTTP 标准异常的处理。
     response.status(HttpStatus.SERVICE_UNAVAILABLE).send({
-      statusCode: HttpStatus.SERVICE_UNAVAILABLE,
-      timestamp: new Date().toISOString(),
-      path: request.url,
+      success: false,
+      status: HttpStatus.SERVICE_UNAVAILABLE,
       message: new ServiceUnavailableException().getResponse(),
     });
   }

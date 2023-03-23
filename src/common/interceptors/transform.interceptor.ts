@@ -18,7 +18,6 @@ export class TransformInterceptor<T> implements NestInterceptor<T, Response<T>> 
       map((data) => ({
         data,
         status: 0,
-        extra: {},
         message: 'success',
         success: true,
       })),

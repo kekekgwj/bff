@@ -93,7 +93,7 @@ export class AuthController {
       response.setCookie('jwt', access_token, { path: '/'});
       return userInfo;
     } catch (e) {
-      throw new HttpException(e.toString(), HttpStatus.UNAUTHORIZED)
+      throw new HttpException(e.message, HttpStatus.UNAUTHORIZED)
     }
     // return this.authService.storeRedis();
   }
