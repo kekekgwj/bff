@@ -30,8 +30,13 @@ export class UserService {
 
   async storeRedisByUsername(verifyCode: string, username: string): Promise<any> {
     return await this.cacheManager.set(username, verifyCode, {ttl: 10 * 60});
-
  }
+  async storeRedisForUserRegister(verifyCode: string, registerInfo: string): Promise<any> {
+    return await this.cacheManager.set(verifyCode, registerInfo, {ttl: 10 * 60});
+  }
+  async getRegisterInfoByVerifyCode(verifyCode: string): Promise<string> {
+    return await this.cacheManager.get(verifyCode);
+  }
   async getRedisByUsername(username: string): Promise<any> {
     return await this.cacheManager.get(username);
   }
@@ -45,7 +50,7 @@ export class UserService {
     throw new Error('当前注册邮箱已存在');
    }
 
-   return await this.usersRepository.save(registerInfo);
+  //  return await this.usersRepository.save(registerInfo);
   }
 
   async retrieveUser(retrieveInfo): Promise<any> {

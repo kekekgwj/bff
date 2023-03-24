@@ -74,7 +74,7 @@ export class ZjlabService {
       context: {  // Data to be sent to template engine.
         code: verifyCode,
         email,
-        link: `http://localhost:3000/user/activate?username=${email}&code=${verifyCode}`,
+        link: `http://10.101.104.61:3000/user/activate?username=${email}&code=${verifyCode}`,
       },
     })
     .then((success) => {

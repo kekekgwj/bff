@@ -6,6 +6,9 @@ import { UserActivate, UserRegister } from './user.dto';
 import { User } from './entities/user.entity';
 import { Public } from '../auth/constants';
 import { RealIP } from 'nestjs-real-ip';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 @ApiTags('用户')
 @Controller({
   path: 'user',
@@ -15,6 +18,8 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly zjlabService: ZjlabService,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
   ) { 
   }
   @ApiOperation({summary: 'SMTP 连接测试'})
@@ -31,9 +36,11 @@ export class UserController {
     @Query() query: UserActivate,
   ) {
     const { username, code } = query;
-    const verifyCode = await this.userService.getRedisByUsername(username);
-    if (verifyCode === code) {
-      await this.userService.activateAccount(username);
+    const registerInfoStr = await this.userService.getRegisterInfoByVerifyCode(code);
+    const registerInfo: Omit<User, 'id'> = JSON.parse(registerInfoStr)
+    if (registerInfo.username === username) {
+      await this.usersRepository.save({ ...registerInfo, active: true });
+      // await this.userService.activateAccount(username);
       return '激活成功';
     } else {
       throw '激活失败';

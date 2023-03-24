@@ -112,10 +112,13 @@ export class AuthController {
       companyType: body.companyType,
     };
     try {
+      // 注册阶段不存储用户信息，仅做判断是否重复注册处理
       await this.userService.registerUser(registerInfo);
+
       const verifyCode = this.userService.generateVerificationCode();
       await this.zjlabService.smtpServerRegister(verifyCode, body.email);
-      await this.userService.storeRedisByUsername(verifyCode, body.username);
+      // redis存储用户信息
+      await this.userService.storeRedisForUserRegister(verifyCode, JSON.stringify(registerInfo));
       return '注册成功，等待激活';
     } catch (e) {
       throw new HttpException(e.toString(), HttpStatus.UNAUTHORIZED);
